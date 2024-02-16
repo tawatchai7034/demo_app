@@ -1,11 +1,13 @@
-import 'dart:ffi';
-
+import 'package:demo_app/models/customer.models.dart';
 import 'package:demo_app/styles/allDialog.dart';
 import 'package:demo_app/styles/theme.color.dart';
+import 'package:demo_app/view.models/customer.view.model.dart';
+import 'package:demo_app/views/customer.view/customer.view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 
 class AddCustomerView extends StatefulWidget {
   const AddCustomerView({super.key});
@@ -110,65 +112,115 @@ class _StepperExampleState extends State<StepperExample> {
   @override
   Widget build(BuildContext context) {
     widthScreen = MediaQuery.of(context).size.width;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Stepper(
-          currentStep: _index,
-          onStepCancel: () {
-            if (_index > 0) {
-              setState(() {
-                _index -= 1;
-              });
-            }
-          },
-          onStepContinue: () {
-            switch (_index) {
-              case 0:
-                {
-                  if ((cIdController.text == "") ||
-                      (cFirstNameController.text == "") ||
-                      (cLastNameController.text == "")) {
-                    Tdialog.errorDialog(
-                      context,
-                      'Please enter Information.',
-                      () {
-                        Navigator.of(context, rootNavigator: true).pop("Ok");
-                      },
-                    );
-                  } else {
-                    if (_index <= 0) {
-                      setState(() {
-                        _index += 1;
-                      });
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Stepper(
+            currentStep: _index,
+            onStepCancel: () {
+              if (_index > 0) {
+                setState(() {
+                  _index -= 1;
+                });
+              }
+            },
+            onStepContinue: () {
+              switch (_index) {
+                case 0:
+                  {
+                    if ((cIdController.text.length < 13) ||
+                        (cIdController.text == "") ||
+                        (cFirstNameController.text == "") ||
+                        (cLastNameController.text == "")) {
+                      Tdialog.errorDialog(
+                        context,
+                        'Please enter Information.',
+                        () {
+                          Navigator.of(context, rootNavigator: true).pop("Ok");
+                        },
+                      );
+                    } else {
+                      if (_index <= 0) {
+                        setState(() {
+                          _index += 1;
+                        });
+                      }
                     }
                   }
-                }
-                break;
-            }
-          },
-          // onStepTapped: (int index) {
-          //   setState(() {
-          //     _index = index;
-          //   });
-          // },
-          steps: <Step>[
-            Step(
-              title: const Text('Information'),
-              content: Container(
-                alignment: Alignment.centerLeft,
-                child: informationForm(),
-              ),
-            ),
-            Step(
-                title: const Text('Address'),
+                  break;
+                case 1:
+                  {
+                    if ((cAddressController.text == "") ||
+                        (cDistrictController == "") ||
+                        (cSubDistrictController == "") ||
+                        (cProvinceController == "") ||
+                        (cPostCodeController == "")) {
+                      Tdialog.errorDialog(
+                        context,
+                        'Please enter address.',
+                        () {
+                          Navigator.of(context, rootNavigator: true).pop("Ok");
+                        },
+                      );
+                    } else {
+                      final viewModel = Provider.of<CustomerViewModel>(context,
+                          listen: false);
+                      CustomerDataModel req = CustomerDataModel(
+                          cId: cIdController.text,
+                          cFirstName: cFirstNameController.text,
+                          cLastName: cLastNameController.text,
+                          cAddress: cAddressController.text,
+                          cDistrict: cDistrictController,
+                          cSubDistrict: cSubDistrictController,
+                          cProvince: cProvinceController,
+                          cPostCode: cPostCodeController,
+                          cTell: cTellController.text);
+                      bool validateCustomer = viewModel.validateCustomer(req);
+                      if (validateCustomer == true) {
+                        Tdialog.errorDialog(
+                          context,
+                          'Identification number is already.',
+                          () {
+                            Navigator.of(context, rootNavigator: true)
+                                .pop("Ok");
+                          },
+                        );
+                      } else {
+                        viewModel.addCustomer(req);
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const CustomerView()),
+                            (Route<dynamic> route) => false);
+                      }
+                    }
+                  }
+                  break;
+              }
+            },
+            // onStepTapped: (int index) {
+            //   setState(() {
+            //     _index = index;
+            //   });
+            // },
+            steps: <Step>[
+              Step(
+                title: const Text('Information'),
                 content: Container(
                   alignment: Alignment.centerLeft,
-                  child: addressForm(),
-                )),
-          ],
-        ),
-      ],
+                  child: informationForm(),
+                ),
+              ),
+              Step(
+                  title: const Text('Address'),
+                  content: Container(
+                    alignment: Alignment.centerLeft,
+                    child: addressForm(),
+                  )),
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -195,7 +247,7 @@ class _StepperExampleState extends State<StepperExample> {
                   color: ThemeColorApp().secondaryColor,
                 ),
                 decoration: InputDecoration(
-                  hintText: "Identification Number",
+                  hintText: "Identification Number 13 digit",
                   hintStyle: TextStyle(
                     color: ThemeColorApp().placeholder,
                     fontSize: 14.0,
@@ -440,6 +492,44 @@ class _StepperExampleState extends State<StepperExample> {
                     ? ""
                     : cPostCodeController),
               )),
+          Container(
+            width: widthScreen * 0.8,
+            height: 48,
+            child: Center(
+              child: TextFormField(
+                focusNode: cTellNode,
+                cursorColor: ThemeColorApp().primaryColor,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(10),
+                ],
+                keyboardType: TextInputType.number,
+                controller: cTellController,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  color: ThemeColorApp().secondaryColor,
+                ),
+                decoration: InputDecoration(
+                  hintText: "Tell",
+                  hintStyle: TextStyle(
+                    color: ThemeColorApp().placeholder,
+                    fontSize: 14.0,
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    cTellController.text = value;
+                    cTellController.selection = TextSelection.fromPosition(
+                        TextPosition(offset: cTellController.text.length));
+                  });
+                },
+                onFieldSubmitted: (value) {
+                  setState(() {
+                    cTellController.text = value;
+                  });
+                },
+              ),
+            ),
+          ),
         ],
       ),
     );

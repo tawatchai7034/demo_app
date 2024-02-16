@@ -16,6 +16,15 @@ class CustomerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool validateCustomer(CustomerDataModel req) {
+    bool error = false;
+    var data = _dataList.where((element) => element.cId == req.cId);
+    if (data.isNotEmpty) {
+      error = true;
+    }
+    return error;
+  }
+
   void deleteCustomer(CustomerDataModel req) async {
     _dataList.remove(req);
     notifyListeners();
