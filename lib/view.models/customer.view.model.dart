@@ -11,8 +11,14 @@ class CustomerViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void editCustomer(CustomerDataModel req) async {
-    _dataList.add(req);
+  void editCustomer(CustomerDataModel old, CustomerDataModel update) async {
+    final index = _dataList.indexOf(old);
+    _dataList[index] = update;
+    notifyListeners();
+  }
+
+  void deleteCustomer(CustomerDataModel req) async {
+    _dataList.remove(req);
     notifyListeners();
   }
 
@@ -23,10 +29,5 @@ class CustomerViewModel extends ChangeNotifier {
       error = true;
     }
     return error;
-  }
-
-  void deleteCustomer(CustomerDataModel req) async {
-    _dataList.remove(req);
-    notifyListeners();
   }
 }

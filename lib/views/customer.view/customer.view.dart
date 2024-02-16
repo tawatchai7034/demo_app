@@ -1,4 +1,4 @@
-import 'package:demo_app/models/customer.models.dart';
+import 'package:demo_app/styles/allDialog.dart';
 import 'package:demo_app/view.models/customer.view.model.dart';
 import 'package:demo_app/views/customer.view/customer.add.dart';
 import 'package:flutter/material.dart';
@@ -22,14 +22,31 @@ class _CustomerViewState extends State<CustomerView> {
             itemCount: viewModel.dataList.length,
             itemBuilder: (context, index) {
               final customer = viewModel.dataList[index];
-              return ListTile(
-                title: Text("${customer.cFirstName} ${customer.cLastName}"),
-                subtitle: Text('Tell: ${customer.cTell}'),
-                trailing: IconButton(
-                  icon: const Icon(Icons.delete),
-                  onPressed: () => viewModel.deleteCustomer(customer),
+              return Container(
+                color: index % 2 == 0 ? Colors.white : Colors.grey[200],
+                child: ListTile(
+                  title: Text("${customer.cFirstName} ${customer.cLastName}"),
+                  subtitle: Text('Tell: ${customer.cTell}'),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete),
+                    onPressed: () {
+                      Tdialog.infoDialog(
+                          context,
+                          Text(
+                              "Do you want delete ${customer.cFirstName} ${customer.cLastName} ?"),
+                          () {
+                        viewModel.deleteCustomer(customer);
+                        Navigator.of(context, rootNavigator: true).pop("Ok");
+                      }, () {
+                        Navigator.of(context, rootNavigator: true)
+                            .pop("Cancel");
+                      });
+                    },
+                  ),
+                  onTap: () {
+                    print(customer.toJson().toString());
+                  },
                 ),
-                onTap: () {},
               );
             },
           );

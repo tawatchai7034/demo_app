@@ -70,7 +70,11 @@ class _StepperExampleState extends State<StepperExample> {
     const DropdownMenuItem(
       value: "กรุงเทพมหานคร",
       child: Text("กรุงเทพมหานคร"),
-    )
+    ),
+    const DropdownMenuItem(
+      value: "พะเยา",
+      child: Text("พะเยา"),
+    ),
   ];
 
   List<DropdownMenuItem> districtList = [
@@ -81,10 +85,6 @@ class _StepperExampleState extends State<StepperExample> {
         style: TextStyle(color: ThemeColorApp().placeholder),
       ),
     ),
-    const DropdownMenuItem(
-      value: "คลองเตย",
-      child: Text("คลองเตย"),
-    )
   ];
 
   List<DropdownMenuItem> subDistrictList = [
@@ -94,18 +94,6 @@ class _StepperExampleState extends State<StepperExample> {
         "Please choose a subdistrict",
         style: TextStyle(color: ThemeColorApp().placeholder),
       ),
-    ),
-    const DropdownMenuItem(
-      value: "คลองเตย",
-      child: Text("คลองเตย"),
-    ),
-    const DropdownMenuItem(
-      value: "คลองตัน",
-      child: Text("คลองตัน"),
-    ),
-    const DropdownMenuItem(
-      value: "พระโขนง",
-      child: Text("พระโขนง"),
     ),
   ];
 
@@ -415,6 +403,87 @@ class _StepperExampleState extends State<StepperExample> {
                   onChanged: (value) {
                     setState(() {
                       cProvinceController = value;
+                      cDistrictController = "";
+                      cSubDistrictController = "";
+                      cPostCodeController = "";
+                      districtList = [];
+                      subDistrictList = [];
+                      switch (value) {
+                        case "พะเยา":
+                          {
+                            cPostCodeController = "56000";
+                            districtList = [
+                              DropdownMenuItem(
+                                value: "",
+                                child: Text(
+                                  "Please choose a district",
+                                  style: TextStyle(
+                                      color: ThemeColorApp().placeholder),
+                                ),
+                              ),
+                              const DropdownMenuItem(
+                                value: "แม่กา",
+                                child: Text("แม่กา"),
+                              )
+                            ];
+
+                            subDistrictList = [
+                              DropdownMenuItem(
+                                value: "",
+                                child: Text(
+                                  "Please choose a subdistrict",
+                                  style: TextStyle(
+                                      color: ThemeColorApp().placeholder),
+                                ),
+                              ),
+                              const DropdownMenuItem(
+                                value: "เมืองพะเยา",
+                                child: Text("เมืองพะเยา"),
+                              )
+                            ];
+                          }
+                        case "กรุงเทพมหานคร":
+                          {
+                            cPostCodeController = "10110";
+                            districtList = [
+                              DropdownMenuItem(
+                                value: "",
+                                child: Text(
+                                  "Please choose a district",
+                                  style: TextStyle(
+                                      color: ThemeColorApp().placeholder),
+                                ),
+                              ),
+                              const DropdownMenuItem(
+                                value: "คลองเตย",
+                                child: Text("คลองเตย"),
+                              )
+                            ];
+
+                            subDistrictList = [
+                              DropdownMenuItem(
+                                value: "",
+                                child: Text(
+                                  "Please choose a subdistrict",
+                                  style: TextStyle(
+                                      color: ThemeColorApp().placeholder),
+                                ),
+                              ),
+                              const DropdownMenuItem(
+                                value: "คลองเตย",
+                                child: Text("คลองเตย"),
+                              ),
+                              const DropdownMenuItem(
+                                value: "คลองตัน",
+                                child: Text("คลองตัน"),
+                              ),
+                              const DropdownMenuItem(
+                                value: "พระโขนง",
+                                child: Text("พระโขนง"),
+                              ),
+                            ];
+                          }
+                      }
                     });
                   },
                   value: cProvinceController,
@@ -469,6 +538,9 @@ class _StepperExampleState extends State<StepperExample> {
                   onChanged: (value) {
                     setState(() {
                       cSubDistrictController = value;
+                      if (value == "เมืองพะเยา") {
+                        cPostCodeController = "56000";
+                      }
                     });
                   },
                   value: cSubDistrictController,
@@ -488,8 +560,8 @@ class _StepperExampleState extends State<StepperExample> {
               ),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 12, 8, 8),
-                child: Text(cSubDistrictController == "Post code"
-                    ? ""
+                child: Text(cSubDistrictController == ""
+                    ? "00000"
                     : cPostCodeController),
               )),
           Container(
