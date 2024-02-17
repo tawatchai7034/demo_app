@@ -1,6 +1,7 @@
 import 'package:demo_app/styles/allDialog.dart';
 import 'package:demo_app/view.models/customer.view.model.dart';
 import 'package:demo_app/views/customer.view/customer.add.dart';
+import 'package:demo_app/views/customer.view/customer.edit.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class _CustomerViewState extends State<CustomerView> {
                 color: index % 2 == 0 ? Colors.white : Colors.grey[200],
                 child: ListTile(
                   title: Text("${customer.cFirstName} ${customer.cLastName}"),
-                  subtitle: Text('Tell: ${customer.cTell}'),
+                  subtitle: Text('Province: ${customer.cProvince}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
@@ -44,7 +45,9 @@ class _CustomerViewState extends State<CustomerView> {
                     },
                   ),
                   onTap: () {
-                    print(customer.toJson().toString());
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) =>
+                            CustomerEdit(information: customer)));
                   },
                 ),
               );
@@ -55,19 +58,6 @@ class _CustomerViewState extends State<CustomerView> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          // final viewModel =
-          //     Provider.of<CustomerViewModel>(context, listen: false);
-          // CustomerDataModel req = CustomerDataModel(
-          //     cId: "EZ0001",
-          //     cFirstName: "1",
-          //     cLastName: "",
-          //     cAddress: "3ขฒ9114",
-          //     cDistrict: "2024-01-31T10:14:48",
-          //     cSubDistrict: "FLUKE",
-          //     cProvince: "กรุงเทพมหานคร",
-          //     cPostCode: "",
-          //     cTell: "000000");
-          // viewModel.addCustomer(req);
           Navigator.of(context).push(
               MaterialPageRoute(builder: (context) => const AddCustomerView()));
         },

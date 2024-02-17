@@ -44,10 +44,6 @@ class _StepperExampleState extends State<StepperExample> {
   FocusNode cFirstNameNode = FocusNode();
   FocusNode cLastNameNode = FocusNode();
   FocusNode cAddressNode = FocusNode();
-  // FocusNode cDistrictNode = FocusNode();
-  // FocusNode cSubDistrictNode = FocusNode();
-  // FocusNode cProvinceNode = FocusNode();
-  // FocusNode cPostCodeNode = FocusNode();
   FocusNode cTellNode = FocusNode();
 
   TextEditingController cIdController = TextEditingController();
@@ -564,6 +560,9 @@ class _StepperExampleState extends State<StepperExample> {
                     ? "00000"
                     : cPostCodeController),
               )),
+          const SizedBox(
+            height: 16,
+          ),
           Container(
             width: widthScreen * 0.8,
             height: 48,
