@@ -1,6 +1,5 @@
 import 'package:demo_app/view.models/customer.view.model.dart';
 import 'package:demo_app/views/customer.view/customer.view.dart';
-import 'package:demo_app/views/shoping/home/index.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: true,
           ),
-          home: const IndexPage(),
+          home: const CustomerView(),
         ));
   }
 }
